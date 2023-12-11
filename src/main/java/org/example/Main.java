@@ -36,7 +36,8 @@ public class Main {
             BufferedReader CheckFromRaspberry = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream(), "UTF-8"));
 
             check = CheckFromRaspberry.readLine();
-            System.out.println("Data Raspberry Pi --> PC: " + check  + " (Done)\n");
+            boolean checkValue = check.contains("true") ? true : false;
+            System.out.println("Data Raspberry Pi --> PC: " + checkValue  + " (Done)\n");
             //return;
         }
     }
