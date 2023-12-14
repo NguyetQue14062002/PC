@@ -2,7 +2,6 @@ package org.example.DTO;
 
 public class BarcodeGuid {
     private  String barguid;
-    private int status;
 
     public String getBarguid() {
         return barguid;
@@ -12,11 +11,4 @@ public class BarcodeGuid {
         this.barguid = barguid;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

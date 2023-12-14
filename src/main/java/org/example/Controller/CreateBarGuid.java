@@ -15,7 +15,7 @@ public class CreateBarGuid{
         return UUID.randomUUID().toString();
     }
 
-    @PostMapping("/api/barguid")
+    @PostMapping("/api/create/barguid")
     public ResponseEntity<BarcodeGuid> handlePostRequest(@RequestBody RequestBodyModel requestBody) {
         try {
             String guid = generateGUID();
@@ -23,11 +23,9 @@ public class CreateBarGuid{
             String barGuid = guid +" "+ barcode;
             BarcodeGuid res = new BarcodeGuid();
             res.setBarguid(barGuid);
-            res.setStatus(0);
             return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
             BarcodeGuid errorRes = new BarcodeGuid();
-            errorRes.setStatus(-1);
             return new ResponseEntity<>(errorRes, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
