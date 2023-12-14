@@ -20,7 +20,7 @@ public class CreateBarGuid{
         try {
             String guid = generateGUID();
             String barcode = requestBody.getBarcode();
-            String barGuid = barcode + " " + guid;
+            String barGuid = guid +" "+ barcode;
             BarcodeGuid res = new BarcodeGuid();
             res.setBarguid(barGuid);
             res.setStatus(0);

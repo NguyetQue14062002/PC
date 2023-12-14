@@ -64,7 +64,7 @@ public class SocketController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     private dataReadDTO handleConnection(Socket connectionSocket) throws IOException {
