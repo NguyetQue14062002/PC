@@ -5,6 +5,7 @@ import org.example.DTO.BarcodeGuid;
 import org.example.DTO.RequestBodyModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +30,10 @@ public class CreateBarGuid{
             return new ResponseEntity<>(errorRes, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("/")
+    public String Hello(){
+        return "Welcome Api fresher";
     }
 }
