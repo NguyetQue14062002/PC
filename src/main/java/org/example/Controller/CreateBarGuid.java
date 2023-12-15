@@ -33,9 +33,9 @@ public class CreateBarGuid{
 
     }
 
-    @PostMapping("/verify/")
+    @GetMapping("/verify/")
     public String Hello(){
 
-        return "";
+        return "hello api";
     }
 }
