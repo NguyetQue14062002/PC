@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CreateBarGuid{
     private String generateGUID() {
+
         return UUID.randomUUID().toString();
     }
 
