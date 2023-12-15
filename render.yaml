@@ -1,4 +1,0 @@
-services:
-  - name: PC
-    buildCommand: docker build -t PC .
-    startCommand: docker run -p 8080:8080 PC
