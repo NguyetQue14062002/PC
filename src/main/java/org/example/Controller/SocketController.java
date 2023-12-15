@@ -25,7 +25,7 @@ public class SocketController {
     private ServerSocket welcomeSocket;
 
     public SocketController() throws IOException {
-        welcomeSocket = new ServerSocket(6543);
+        welcomeSocket = new ServerSocket(5500);
         executorService = Executors.newFixedThreadPool(10); // Số lượng luồng tối đa trong pool
         listenForConnections();
     }
