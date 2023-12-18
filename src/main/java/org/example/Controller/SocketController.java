@@ -3,18 +3,21 @@ package org.example.Controller;
 import org.example.DTO.dataReadDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.example.Controller.SecondAPIHandler.callSecondAPI;
 
 @RestController
 @RequestMapping("/api")
@@ -25,8 +28,8 @@ public class SocketController {
     private ServerSocket welcomeSocket;
 
     public SocketController() throws IOException {
-        welcomeSocket = new ServerSocket(5500);
-        executorService = Executors.newFixedThreadPool(10); // Số lượng luồng tối đa trong pool
+        welcomeSocket = new ServerSocket(6543);
+        executorService = Executors.newFixedThreadPool(10);
         listenForConnections();
     }
 
@@ -35,7 +38,7 @@ public class SocketController {
             while (true) {
                 try {
                     Socket connectionSocket = welcomeSocket.accept();
-                    latestConnectionSocket = connectionSocket; // Lưu trữ kết nối mới nhất
+                    latestConnectionSocket = connectionSocket;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -43,21 +46,24 @@ public class SocketController {
         });
         thread.start();
     }
-
-    @GetMapping("/verify-barGuRa-barGuTem")
-    public void handleVerify() {
-
-    }
-
-    @GetMapping("/socket")
-    public ResponseEntity<Object> handleSocketRequest() {
+    private String secondAPICallResult;
+    @PostMapping("/verify")
+    public ResponseEntity<String> handleSocketRequest(@RequestBody Map<String, String> requestBody) {
         try {
+            String barGuid = requestBody.get("barGuid");
             Socket connectionSocket = latestConnectionSocket;
             latestConnectionSocket = null;
 
-            if (connectionSocket != null) {
+            if (connectionSocket != null && barGuid !=null) {
                 dataReadDTO result = handleConnection(connectionSocket);
-                return ResponseEntity.ok(result);
+                if(barGuid.equals(result.getUid())) {
+                    secondAPICallResult = "{ Chuỗi ghi lên tem = "+ barGuid+  "\nChuỗi đọc từ tem = " +result.getUid() + "\nHai chuỗi giống nhau}";
+                } else {
+                    secondAPICallResult = "{ Chuỗi ghi lên tem = "+ barGuid+  "\nChuỗi đọc từ tem = " +result.getUid() + "\nHai chuỗi khác nhau}";
+
+                }
+
+                   return ResponseEntity.ok(secondAPICallResult );
             } else {
                 System.out.println("No connection available");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -92,42 +98,13 @@ public class SocketController {
         return data;
     }
 
-//@GetMapping("/socket")
-//public String handleSocketRequest() {
-//    try {
-//        Socket connectionSocket = latestConnectionSocket; // Lấy kết nối mới nhất
-//        latestConnectionSocket = null; // Đặt lại kết nối mới nhất thành null
-//
-//        if (connectionSocket != null) {
-//            String checkValue = handleConnection(connectionSocket);
-//            return checkValue;
-//        } else {
-//            return "No connection available";
-//        }
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//        return "false";
-//    }
-//}
-//    private String handleConnection(Socket connectionSocket) throws IOException {
-//
-//        BufferedReader inFromRaspberry = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream(), "UTF-8"));
-//        DataOutputStream outToRaspberry = new DataOutputStream(connectionSocket.getOutputStream());
-//        BufferedReader CheckFromRaspberry = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream(), "UTF-8"));
-//
-//        String stringFromRaspberry = inFromRaspberry.readLine();
-//        System.out.println("Data Raspberry Pi --> PC: " + stringFromRaspberry + " (Done)\n");
-//
-//        String stringToRaspberry = stringFromRaspberry + "\n";
-//        outToRaspberry.write((stringToRaspberry).getBytes("UTF-8"));
-//
-//        String check = CheckFromRaspberry.readLine();
-//        System.out.println("Data Raspberry Pi --> PC: " + check + " (Done)\n");
-//
-//        connectionSocket.close();
-//        inFromRaspberry.close();
-//        outToRaspberry.close();
-//        CheckFromRaspberry.close();
-//        return check;
-//    }
+    @GetMapping("/get/secondapiresponse")
+    public ResponseEntity<String> getSecondAPIResponse() {
+        if (secondAPICallResult != null) {
+            return new ResponseEntity<>(secondAPICallResult, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

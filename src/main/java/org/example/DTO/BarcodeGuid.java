@@ -1,7 +1,7 @@
 package org.example.DTO;
 
 public class BarcodeGuid {
-    private  String barguid;
+    private String barguid;
 
     public String getBarguid() {
         return barguid;
