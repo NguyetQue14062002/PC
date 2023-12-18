@@ -16,6 +16,7 @@ public class SecondAPIHandler {
 
         try {
             JSONObject requestBody = new JSONObject();
+            System.out.println("Để in lên tem: "+barGuid);
             requestBody.put("barGuid", barGuid);
 
             StringEntity requestBodyEntity = new StringEntity(requestBody.toString());
