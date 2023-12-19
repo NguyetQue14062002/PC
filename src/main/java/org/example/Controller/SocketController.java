@@ -1,10 +1,8 @@
 package org.example.Controller;
-
 import org.example.DTO.RequestBodyModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -80,7 +78,8 @@ public class SocketController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("errorRes", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -94,11 +93,11 @@ public class SocketController {
             if(barGuid.equals(receivedData))
             {
                 secondAPICallResult = "Hai chuỗi giống nhau";
-                connectionSocket.close(); // Đóng kết nối socket
+               //connectionSocket.close(); // Đóng kết nối socket
             }
             else {
                 secondAPICallResult = "Hai chuỗi khác nhau";
-                connectionSocket.close(); // Đóng kết nối socket
+                //connectionSocket.close(); // Đóng kết nối socket
             }
             return ResponseEntity.ok(secondAPICallResult );
         } catch (IOException e) {
@@ -127,7 +126,6 @@ public class SocketController {
         private String receiveFromRaspberry(Socket connectionSocket) throws IOException {
             BufferedReader checkFromRaspberry = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream(), "UTF-8"));
             String check = checkFromRaspberry.readLine();
-            System.out.println("Đã nhận dữ liệu từ Raspberry Pi");
             System.out.println("Data Raspberry Pi --> PC: " + check + " (Done)\n");
             return check;
         }
